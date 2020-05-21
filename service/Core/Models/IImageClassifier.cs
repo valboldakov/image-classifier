@@ -1,5 +1,6 @@
 using System.Drawing;
 using System.Runtime.InteropServices;
+using System.Text;
 
 namespace Core.Models
 {
@@ -13,5 +14,8 @@ namespace Core.Models
 
         [DllImport("imageclassifier.so", CallingConvention = CallingConvention.Cdecl, EntryPoint = "eval_model")]
         protected static extern unsafe int LibEvalModel(void* data, int size, int labelsAmount, void* labelNum);
+
+        [DllImport("imageclassifier.so", CallingConvention = CallingConvention.Cdecl, EntryPoint = "get_last_error")]
+        protected static extern int LibGetLastError(StringBuilder msg, int maxMsgSize);
     }
 }

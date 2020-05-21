@@ -118,3 +118,11 @@ TEST_CASE("Evaluating model", "[eval_model]") {
     REQUIRE(res == 0);
     REQUIRE(label_num <= 9);
 }
+
+TEST_CASE("Get last error", "[get_last_error]") {
+    load_model("research/not_exist.pt");
+    char msg[512];
+    auto res = get_last_error(msg, 512);
+    REQUIRE(res == 0);
+    REQUIRE(std::string(msg) == "open file failed, file path: research/not_exist.pt");
+}

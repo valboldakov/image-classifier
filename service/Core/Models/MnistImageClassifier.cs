@@ -1,5 +1,6 @@
 using System;
 using System.Drawing;
+using System.Text;
 using Core.Exceptions;
 
 namespace Core.Models
@@ -36,25 +37,21 @@ namespace Core.Models
 
         public string ClassifyImage(Image image)
         {
-            var data = PreprocessImage(image);
+            var data = new Memory<float>(PreprocessImage(image));
             var labelNum = 0;
             int res;
             unsafe
             {
-                fixed (float* ptr = data.AsSpan())
-                {
-                    res = IImageClassifier.LibEvalModel(ptr,
-                        _configuration.ImageHeight * _configuration.ImageWidth,
-                        _configuration.Labels.Length, &labelNum);
-                }
+                using var memoryHandle = data.Pin();
+                res = IImageClassifier.LibEvalModel(memoryHandle.Pointer,
+                    _configuration.ImageHeight * _configuration.ImageWidth,
+                    _configuration.Labels.Length, &labelNum);
             }
 
-            if (res != 0)
-            {
-                throw new ModelEvaluationFailedException();
-            }
-
-            return _configuration.Labels[labelNum];
+            if (res == 0) return _configuration.Labels[labelNum];
+            var msg = new StringBuilder(512);
+            IImageClassifier.LibGetLastError(msg, 512);
+            throw new ModelEvaluationFailedException(msg.ToString());
         }
 
         public void LoadModel()
