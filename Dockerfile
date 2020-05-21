@@ -17,3 +17,30 @@ RUN cd image-classifier-lib/ && mkdir build && cd build && \
     make
 COPY research/traced_model.pt ./research/traced_model.pt
 RUN ./image-classifier-lib/build/image_classifier_lib_test
+
+
+FROM mcr.microsoft.com/dotnet/core/sdk:3.1-bionic AS image-classifier-service-build
+
+RUN apt-get update && apt-get install -y libgdiplus
+
+WORKDIR /app
+
+COPY --from=image-classifier-lib /opt/libtorch /opt/libtorch
+COPY --from=image-classifier-lib /app/image-classifier-lib/build/libimageclassifier.so /usr/lib
+COPY service/ ./
+
+RUN dotnet publish -o ./ImageClassifierService.Core
+RUN mv ./Test/TestData Test/bin/Debug/netcoreapp3.1 && dotnet test
+
+
+FROM mcr.microsoft.com/dotnet/core/aspnet:3.1-bionic AS  image-classifier-service
+
+WORKDIR app
+
+RUN apt-get update && apt-get install -y libgdiplus
+
+COPY --from=image-classifier-lib /opt/libtorch /opt/libtorch
+COPY --from=image-classifier-lib /app/image-classifier-lib/build/libimageclassifier.so /usr/lib
+
+COPY --from=image-classifier-service-build /app/ImageClassifierService.Core .
+ENTRYPOINT ["./Core"]

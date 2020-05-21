@@ -5,3 +5,9 @@ research/.gitignore
 research/model.pt
 image-classifier-lib/.idea
 image-classifier-lib/build
+service/.idea/
+service/.gitignore
+service/Core/bin/
+service/Core/obj/
+service/Test/bin/
+service/Test/obj/
