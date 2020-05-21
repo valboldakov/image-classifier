@@ -14,10 +14,12 @@ int32_t load_model(char *path_to_model);
  *
  * @param[in] data array of floats for the input layer
  * @param[in] size size of the input data array
+ * @param[in] labels_amount amount of labels recognizable with model
  * @param[out] label_num number of the label with the highest probability
  * @return 0 in case of success
+ * @return -1 in case of success torch internal error
  */
-int32_t eval_model(const float *data, uint32_t size, uint32_t *label_num);
+int32_t eval_model(const float *data, uint32_t size, uint32_t labels_amount, uint32_t *label_num);
 };
 
 #endif

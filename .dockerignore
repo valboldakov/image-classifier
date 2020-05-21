@@ -1,0 +1,7 @@
+research/data
+research/.ipynb_checkpoints
+research/mnist.ipynb
+research/.gitignore
+research/model.pt
+image-classifier-lib/.idea
+image-classifier-lib/build

@@ -7,5 +7,8 @@ find_package(Catch2 REQUIRED)
 
 set(IMAGE_CLASSIFIER_LIB_SRC "src/image_classifier_lib.h" "src/image_classifier_lib.cpp")
 
+add_library(imageclassifier SHARED ${IMAGE_CLASSIFIER_LIB_SRC})
+target_link_libraries(imageclassifier ${TORCH_LIBRARIES})
+
 add_executable(image_classifier_lib_test tests/image_classifier_lib_test.cpp ${IMAGE_CLASSIFIER_LIB_SRC})
 target_link_libraries(image_classifier_lib_test Catch2::Catch2 ${TORCH_LIBRARIES})
