@@ -57,9 +57,9 @@ namespace Core.Models
             return _configuration.Labels[labelNum];
         }
 
-        public void LoadModel(string pathToModel)
+        public void LoadModel()
         {
-            var res = IImageClassifier.LibLoadModel(pathToModel);
+            var res = IImageClassifier.LibLoadModel(_configuration.PathToModel);
             if (res != 0)
             {
                 throw new ModelNotLoadedException();

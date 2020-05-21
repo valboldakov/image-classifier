@@ -1,4 +1,3 @@
-using System;
 using System.Drawing;
 using System.Runtime.InteropServices;
 
@@ -7,7 +6,7 @@ namespace Core.Models
     public interface IImageClassifier
     {
         public string ClassifyImage(Image image);
-        public void LoadModel(string pathToModel);
+        public void LoadModel();
 
         [DllImport("imageclassifier.so", CallingConvention = CallingConvention.Cdecl, EntryPoint = "load_model")]
         protected static extern int LibLoadModel(string modelConfig);

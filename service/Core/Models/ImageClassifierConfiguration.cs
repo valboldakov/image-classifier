@@ -9,5 +9,6 @@ namespace Core.Models
         public string[] Labels;
         public int ImageWidth;
         public int ImageHeight;
+        public string PathToModel;
     }
 }
