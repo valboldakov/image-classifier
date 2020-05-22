@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Threading;
 using System.Threading.Tasks;
-using Core.Exceptions;
 using Core.Models;
 using Xunit;
 

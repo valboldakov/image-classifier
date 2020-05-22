@@ -29,19 +29,20 @@ namespace Core.Models
 
         public Task StartWorkers(CancellationToken cancellationToken)
         {
+            var tasks = new List<Task>();
             foreach (var worker in _workers)
             {
-                worker.StartWorker(cancellationToken);
+                tasks.Add(worker.StartWorker(cancellationToken));
             }
 
-            return Task.CompletedTask;
+            return Task.WhenAll(tasks.ToArray());
         }
 
         public Task StopWorkers()
         {
             foreach (var worker in _workers)
             {
-                worker.Thread.Join();
+                worker.StopWorker();
             }
 
             return Task.CompletedTask;

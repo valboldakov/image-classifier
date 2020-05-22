@@ -8,8 +8,8 @@ namespace Core.Models
     {
         Task<string> Classify(Image image);
 
-        void StartWorker(CancellationToken cancellationToken);
+        Task<int> StartWorker(CancellationToken cancellationToken);
 
-        Thread Thread { get; }
+        void StopWorker();
     }
 }

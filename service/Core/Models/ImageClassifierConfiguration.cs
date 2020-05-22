@@ -6,10 +6,10 @@ namespace Core.Models
     /// </summary>
     public class ImageClassifierConfiguration
     {
-        public string ClassifierType;
-        public string[] Labels;
-        public int ImageWidth;
-        public int ImageHeight;
-        public string PathToModel;
+        public string ClassifierType { get; set; }
+        public string[] Labels { get; set; }
+        public int ImageWidth { get; set; }
+        public int ImageHeight { get; set; }
+        public string PathToModel { get; set; }
     }
 }

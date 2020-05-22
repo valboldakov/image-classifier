@@ -42,5 +42,6 @@ RUN apt-get update && apt-get install -y libgdiplus
 COPY --from=image-classifier-lib /opt/libtorch /opt/libtorch
 COPY --from=image-classifier-lib /app/image-classifier-lib/build/libimageclassifier.so /usr/lib
 
+COPY research/traced_model.pt research/traced_model.pt
 COPY --from=image-classifier-service-build /app/ImageClassifierService.Core .
 ENTRYPOINT ["./Core"]

@@ -24,7 +24,7 @@ namespace Test
                 };
                 var classifier = new MnistImageClassifier(configuration);
                 var worker = new ImageClassifierWorker(classifier);
-                worker.StartWorker(cancellationTokenSource.Token);
+                await worker.StartWorker(cancellationTokenSource.Token);
                 workers.Add(worker);
             }
 
@@ -47,7 +47,7 @@ namespace Test
             cancellationTokenSource.Cancel();
             foreach (var worker in workers)
             {
-                worker.Thread.Join();
+                worker.StopWorker();
             }
         }
     }

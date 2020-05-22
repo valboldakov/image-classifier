@@ -11,8 +11,13 @@ namespace Core.Models
     {
         private readonly IImageClassifier _classifier;
         private readonly BufferBlock<IImageClassificationTask> _queue;
+        private Thread _thread;
         private bool _isCanceled;
-        public Thread Thread { get; private set; }
+
+        public void StopWorker()
+        {
+            _thread.Join();
+        }
 
         public ImageClassifierWorker(IImageClassifier imageClassifier)
         {
@@ -37,11 +42,22 @@ namespace Core.Models
             return taskCompletionSource.Task;
         }
 
-        public void StartWorker(CancellationToken cancellationToken)
+        public Task<int> StartWorker(CancellationToken cancellationToken)
         {
-            Thread = new Thread(() =>
+            var taskCompletionSource = new TaskCompletionSource<int>();
+            _thread = new Thread(() =>
             {
-                _classifier.LoadModel();
+                try
+                {
+                    _classifier.LoadModel();
+                }
+                catch (ModelNotLoadedException exception)
+                {
+                    taskCompletionSource.SetException(exception);
+                    return;
+                }
+
+                taskCompletionSource.SetResult(0);
                 while (!_isCanceled)
                 {
                     IImageClassificationTask classificationTask;
@@ -51,10 +67,11 @@ namespace Core.Models
                     }
                     catch (OperationCanceledException)
                     {
+                        _isCanceled = true;
                         return;
                     }
 
-                    var label = "";
+                    string label;
                     try
                     {
                         label = _classifier.ClassifyImage(classificationTask.Image);
@@ -69,7 +86,8 @@ namespace Core.Models
                     _isCanceled = cancellationToken.IsCancellationRequested;
                 }
             });
-            Thread.Start();
+            _thread.Start();
+            return taskCompletionSource.Task;
         }
     }
 }
