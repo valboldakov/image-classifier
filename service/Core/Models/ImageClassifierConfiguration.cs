@@ -6,6 +6,7 @@ namespace Core.Models
     /// </summary>
     public class ImageClassifierConfiguration
     {
+        public string ClassifierType;
         public string[] Labels;
         public int ImageWidth;
         public int ImageHeight;

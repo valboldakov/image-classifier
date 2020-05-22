@@ -12,6 +12,7 @@ namespace Core.Models
         private readonly IImageClassifier _classifier;
         private readonly BufferBlock<IImageClassificationTask> _queue;
         private bool _isCanceled;
+        public Thread Thread { get; private set; }
 
         public ImageClassifierWorker(IImageClassifier imageClassifier)
         {
@@ -36,9 +37,9 @@ namespace Core.Models
             return taskCompletionSource.Task;
         }
 
-        public Thread StartWorker(CancellationToken cancellationToken)
+        public void StartWorker(CancellationToken cancellationToken)
         {
-            var thread = new Thread(() =>
+            Thread = new Thread(() =>
             {
                 _classifier.LoadModel();
                 while (!_isCanceled)
@@ -68,8 +69,7 @@ namespace Core.Models
                     _isCanceled = cancellationToken.IsCancellationRequested;
                 }
             });
-            thread.Start();
-            return thread;
+            Thread.Start();
         }
     }
 }

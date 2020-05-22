@@ -13,7 +13,6 @@ namespace Test
         public async Task SmokeTestWorkers()
         {
             using var cancellationTokenSource = new CancellationTokenSource();
-            var workerThreads = new List<Thread>();
             var workers = new List<IImageClassifierWorker>();
             for (var i = 0; i < 5; ++i)
             {
@@ -25,8 +24,7 @@ namespace Test
                 };
                 var classifier = new MnistImageClassifier(configuration);
                 var worker = new ImageClassifierWorker(classifier);
-                var workerTask = worker.StartWorker(cancellationTokenSource.Token);
-                workerThreads.Add(workerTask);
+                worker.StartWorker(cancellationTokenSource.Token);
                 workers.Add(worker);
             }
 
@@ -47,9 +45,9 @@ namespace Test
             }
 
             cancellationTokenSource.Cancel();
-            foreach (var thread in workerThreads)
+            foreach (var worker in workers)
             {
-                thread.Join();
+                worker.Thread.Join();
             }
         }
     }
