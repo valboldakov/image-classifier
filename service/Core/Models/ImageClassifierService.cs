@@ -5,12 +5,11 @@ using System.Threading;
 using System.Threading.Tasks;
 using Core.Exceptions;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
 namespace Core.Models
 {
-    public class ImageClassifierService : IHostedService, IDisposable, IImageClassifierService
+    public class ImageClassifierService : IDisposable, IImageClassifierService
     {
         private readonly ILogger<ImageClassifierService> _logger;
         private readonly Dictionary<string, ImageClassifierWorkerPool> _namedWorkerPools;
@@ -55,6 +54,7 @@ namespace Core.Models
             catch (ModelNotLoadedException exception)
             {
                 _logger.LogError(exception.Message);
+                throw;
             }
         }
 

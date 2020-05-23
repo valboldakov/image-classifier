@@ -1,10 +1,9 @@
+using Core.Controllers;
 using Core.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 
 namespace Core
 {
@@ -21,22 +20,17 @@ namespace Core
         {
             services.Configure<IConfiguration>(_configuration);
             services.AddSingleton<IImageClassifierFactory, ImageClassifierFactory>();
-            services.AddHostedService<ImageClassifierService>();
+            services.AddSingleton<IImageClassifierService, ImageClassifierService>();
+            services.AddHostedService<ImageClassifierServiceInitializer>();
+            services.AddGrpc();
+            services.AddControllers();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            if (env.IsDevelopment())
-            {
-                app.UseDeveloperExceptionPage();
-            }
-
             app.UseRouting();
 
-            app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapGet("/", async context => { await context.Response.WriteAsync("Hello World!"); });
-            });
+            app.UseEndpoints(endpoints => { endpoints.MapGrpcService<ImageClassifierController>(); });
         }
     }
 }

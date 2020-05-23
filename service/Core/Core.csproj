@@ -6,7 +6,13 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <Protobuf Include="Protofiles/ImageClassifier.proto" GrpcServices="Both" />
+    </ItemGroup>
+
+    <ItemGroup>
       <PackageReference Include="CoreCompat.System.Drawing" Version="1.0.0-beta006" />
+      <PackageReference Include="Grpc" Version="2.28.0" />
+      <PackageReference Include="Grpc.AspNetCore" Version="2.28.0" />
     </ItemGroup>
 
 </Project>

@@ -12,6 +12,10 @@ namespace Core
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
-                .ConfigureWebHostDefaults(webBuilder => { webBuilder.UseStartup<Startup>(); });
+                .ConfigureWebHostDefaults(webBuilder =>
+                {
+                    webBuilder.ConfigureKestrel(options => options.ListenAnyIP(5000));
+                    webBuilder.UseStartup<Startup>();
+                });
     }
 }
