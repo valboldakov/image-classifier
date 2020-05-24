@@ -1,5 +1,6 @@
 using System;
 using System.Drawing;
+using System.Drawing.Imaging;
 using System.Text;
 using Core.Exceptions;
 
@@ -20,9 +21,9 @@ namespace Core.Models
             {
                 for (var y = 0; y < resizedImage.Height; ++y)
                 {
-                    var color = resizedImage.GetPixel(x, y);
+                    var color = resizedImage.GetPixel(y, x);
                     var value = (float) (color.R + color.G + color.B) / 3;
-                    resultData[i] = (value - mean) / std;
+                    resultData[i] = -(value / 255 - mean) / std;
                     i++;
                 }
             }
