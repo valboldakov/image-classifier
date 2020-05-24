@@ -15,4 +15,11 @@
       <PackageReference Include="Grpc.AspNetCore" Version="2.28.0" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Content Update="Views\MnistClassifier\Index.cshtml">
+        <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+        <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      </Content>
+    </ItemGroup>
+
 </Project>

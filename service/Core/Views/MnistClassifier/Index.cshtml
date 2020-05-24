@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
+          integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+
+    <title>MNIST Classifier</title>
+    <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/fabric.js/1.4.0/fabric.min.js"></script>
+    <style type="text/css">
+        #sheet {
+            border: 1px solid black;
+        }
+    </style>
+    <script type='text/javascript'>
+        let canvas;
+
+        function recognize() {
+            let data = {ClassifierType: "MNISTClassifier",
+                        Base64EncodedImage: canvas.toDataURL({"format": "png"}).slice(22)
+                        };
+            fetch("MnistClassifier/recognize", {
+                method: "POST",
+                body: JSON.stringify(data),
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            }).then(res => res.json()).then(data => {
+                document.getElementById("recognized_digit").innerHTML = data['label'];
+            });
+        }
+
+        function clear_canvas() {
+            canvas.clear();
+        }
+
+        window.onload = function () {
+            canvas = new fabric.Canvas('sheet', {backgroundColor : "#fff"});
+            canvas.isDrawingMode = true;
+            canvas.freeDrawingBrush.width = 20;
+            canvas.freeDrawingBrush.color = "#000";
+        }
+    </script>
+</head>
+<body>
+<div class="jumbotron text-center bg-dark text-white">
+    <h1>MNIST Classifier</h1>
+    <p>Draw a digit to see a result.</p>
+</div>
+<div class="container">
+    <div class="row">
+        <div class="col-sm-4 text-center">
+            <h3>Your digit is:</h3>
+            <h1 id="recognized_digit">0</h1>
+        </div>
+        <div class="col-sm-8">
+            <h3>Draw a digit:</h3>
+            <button class="btn btn-dark" onclick="clear_canvas()">Clear</button>
+            <button class="btn btn-dark" onclick="recognize()">Recognize</button>
+            <canvas id="sheet" width="256" height="256"></canvas>
+        </div>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+        integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+        crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+        crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"
+        integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI"
+        crossorigin="anonymous"></script>
+</body>
+</html>

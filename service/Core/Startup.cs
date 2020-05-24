@@ -18,6 +18,7 @@ namespace Core
 
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddMvc();
             services.Configure<IConfiguration>(_configuration);
             services.AddSingleton<IImageClassifierFactory, ImageClassifierFactory>();
             services.AddSingleton<IImageClassifierService, ImageClassifierService>();
@@ -30,7 +31,11 @@ namespace Core
         {
             app.UseRouting();
 
-            app.UseEndpoints(endpoints => { endpoints.MapGrpcService<ImageClassifierController>(); });
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapControllers();
+                endpoints.MapGrpcService<ImageClassifierController>();
+            });
         }
     }
 }
